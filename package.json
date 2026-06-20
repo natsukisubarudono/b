@@ -8,11 +8,7 @@
     "dev": "nodemon index.js"
   },
   "keywords": [
-    "discord",
-    "bot",
-    "economy",
-    "game",
-    "discord.js"
+    "p"
   ],
   "author": "Your Name",
   "license": "MIT",
@@ -34,7 +30,7 @@
     "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": ">=16.9.0"
+    "node": ">=18.0.0"
   },
   "overrides": {
     "uuid": "^8.3.2"
