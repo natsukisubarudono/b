@@ -1,0 +1,42 @@
+{
+  "name": "discord-economy-bot",
+  "version": "1.0.0",
+  "description": "A Discord economy bot with balance, daily rewards, coinflip, and more",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "economy",
+    "game",
+    "discord.js"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@railway/cli": "^5.18.0",
+    "@solana/web3.js": "^1.98.4",
+    "bip32": "^5.0.1",
+    "bip39": "^3.1.0",
+    "bitcoinjs-lib": "^7.0.1",
+    "canvas": "^2.11.2",
+    "discord.js": "^14.14.1",
+    "ed25519-hd-key": "^2.0.0",
+    "sharp": "^0.35.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "tiny-secp256k1": "^2.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.9.0"
+  },
+  "overrides": {
+    "uuid": "^8.3.2"
+  }
+}
