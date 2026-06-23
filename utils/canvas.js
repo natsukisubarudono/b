@@ -1,9 +1,14 @@
-let createCanvas;
+let createCanvas = null;
 try {
     const canvasPkg = require('canvas');
     createCanvas = canvasPkg.createCanvas;
-    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
-} catch (e) {
+    try {
+        canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+    } catch (fontErr) {
+        console.warn('[canvas] Font registration failed (will use system font):', fontErr.message);
+    }
+} catch (err) {
+    console.error('[canvas] Canvas failed to load:', err.message);
     createCanvas = null;
 }
 

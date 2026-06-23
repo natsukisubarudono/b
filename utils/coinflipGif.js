@@ -1,9 +1,16 @@
-let createCanvas;
+let createCanvas = null;
 try {
     const canvasPkg = require('canvas');
     createCanvas = canvasPkg.createCanvas;
-    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
-} catch { createCanvas = null; }
+    try {
+        canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+    } catch (fontErr) {
+        console.warn('[coinflipGif] Font registration failed (will use system font):', fontErr.message);
+    }
+} catch (err) {
+    console.error('[coinflipGif] Canvas failed to load:', err.message);
+    createCanvas = null;
+}
 
 const GIFEncoder = require('gif-encoder-2');
 
