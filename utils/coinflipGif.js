@@ -1,5 +1,9 @@
 let createCanvas;
-try { createCanvas = require('canvas').createCanvas; } catch { createCanvas = null; }
+try {
+    const canvasPkg = require('canvas');
+    createCanvas = canvasPkg.createCanvas;
+    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+} catch { createCanvas = null; }
 
 const GIFEncoder = require('gif-encoder-2');
 
@@ -85,7 +89,7 @@ function drawCoin(ctx, scaleX, showLabel, isHold) {
         const alpha = Math.min(1, (absX - 0.12) / 0.25);
         ctx.globalAlpha  = alpha;
         ctx.fillStyle    = color;
-        ctx.font         = `bold ${Math.round(R * 0.88)}px Arial`;
+        ctx.font         = `bold ${Math.round(R * 0.88)}px Roboto`;
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
         if (isHold) { ctx.shadowColor = color; ctx.shadowBlur = 16; }
@@ -100,7 +104,7 @@ function drawCoin(ctx, scaleX, showLabel, isHold) {
     if (isHold) {
         const word = isTails ? 'TAILS' : 'HEADS';
         ctx.fillStyle    = color;
-        ctx.font         = 'bold 22px Arial';
+        ctx.font         = 'bold 22px Roboto';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'bottom';
         ctx.shadowColor  = color;

@@ -1,5 +1,9 @@
 let createCanvas;
-try { createCanvas = require('canvas').createCanvas; } catch { createCanvas = null; }
+try {
+    const canvasPkg = require('canvas');
+    createCanvas = canvasPkg.createCanvas;
+    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+} catch { createCanvas = null; }
 
 const GIFEncoder = require('gif-encoder-2');
 
@@ -96,7 +100,7 @@ function drawFrame(ctx, prices, n, choice, win, isHold) {
     ctx.setLineDash([]);
 
     ctx.fillStyle  = '#555566';
-    ctx.font       = '11px Arial';
+    ctx.font       = '11px Roboto';
     ctx.textAlign  = 'right';
     ctx.textBaseline = 'middle';
     ctx.fillText('0', GRAPH_L - 14, BASELINE);
@@ -141,12 +145,12 @@ function drawFrame(ctx, prices, n, choice, win, isHold) {
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'top';
     ctx.fillStyle    = '#888899';
-    ctx.font         = 'bold 13px Arial';
+    ctx.font         = 'bold 13px Roboto';
     ctx.fillText('📈 STOCK', GRAPH_L - 8, 12);
 
     ctx.textAlign = 'right';
     ctx.fillStyle = choice === 'high' ? GREEN : RED;
-    ctx.font      = 'bold 13px Arial';
+    ctx.font      = 'bold 13px Roboto';
     ctx.fillText(`YOUR PICK: ${choice.toUpperCase()}`, GRAPH_R + 8, 12);
 
     // ── Result banner (hold frames only) ───────────────────────────────────────
@@ -170,7 +174,7 @@ function drawFrame(ctx, prices, n, choice, win, isHold) {
         ctx.stroke();
 
         ctx.fillStyle    = resultColor;
-        ctx.font         = 'bold 15px Arial';
+        ctx.font         = 'bold 15px Roboto';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
         ctx.shadowColor  = resultColor;

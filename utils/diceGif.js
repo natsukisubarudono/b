@@ -1,5 +1,9 @@
 let createCanvas;
-try { createCanvas = require('canvas').createCanvas; } catch { createCanvas = null; }
+try {
+    const canvasPkg = require('canvas');
+    createCanvas = canvasPkg.createCanvas;
+    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+} catch { createCanvas = null; }
 
 const GIFEncoder = require('gif-encoder-2');
 
@@ -112,13 +116,13 @@ function drawFrame(ctx, p, b, win, tie, isResult) {
     // ── Labels ─────────────────────────────────────────────────────────────────
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font         = 'bold 14px Arial';
+    ctx.font         = 'bold 14px Roboto';
     ctx.fillStyle    = '#555566';
     ctx.fillText('YOU', P1_CX, DIE_CY + DIE_SIZE / 2 + 22);
     ctx.fillText('BOT', P2_CX, DIE_CY + DIE_SIZE / 2 + 22);
 
     // ── VS ─────────────────────────────────────────────────────────────────────
-    ctx.font      = 'bold 26px Arial';
+    ctx.font      = 'bold 26px Roboto';
     ctx.fillStyle = isResult ? (tie ? YELLOW : '#555566') : '#333344';
     ctx.fillText('VS', W / 2, DIE_CY);
 
@@ -126,7 +130,7 @@ function drawFrame(ctx, p, b, win, tie, isResult) {
     if (isResult) {
         const resultText = tie ? '🤝 TIE' : win ? '✅ YOU WIN' : '❌ YOU LOSE';
         const resultColor = tie ? YELLOW : win ? LIME : RED;
-        ctx.font         = 'bold 20px Arial';
+        ctx.font         = 'bold 20px Roboto';
         ctx.fillStyle    = resultColor;
         ctx.shadowColor  = resultColor;
         ctx.shadowBlur   = 10;
@@ -134,7 +138,7 @@ function drawFrame(ctx, p, b, win, tie, isResult) {
         ctx.shadowBlur   = 0;
 
         // die value labels
-        ctx.font      = 'bold 16px Arial';
+        ctx.font      = 'bold 16px Roboto';
         ctx.fillStyle = pColor;
         ctx.fillText(`${p}`, P1_CX, DIE_CY - DIE_SIZE / 2 - 18);
         ctx.fillStyle = bColor;

@@ -1,6 +1,8 @@
 let createCanvas;
 try {
-    createCanvas = require('canvas').createCanvas;
+    const canvasPkg = require('canvas');
+    createCanvas = canvasPkg.createCanvas;
+    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
 } catch (e) {
     createCanvas = null;
 }
@@ -22,21 +24,21 @@ function generateBalanceImage(balance, username) {
     ctx.textBaseline = 'middle';
 
     ctx.fillStyle = '#00ff00';
-    ctx.font = 'bold 38px Arial';
+    ctx.font = 'bold 38px Roboto';
     ctx.fillText(`${username}'s Balance`, width / 2, 110);
 
-    ctx.font = 'bold 80px Arial';
+    ctx.font = 'bold 80px Roboto';
     ctx.fillText(`${balance} points`, width / 2, 220);
 
     ctx.fillStyle = '#00cc00';
-    ctx.font = '32px Arial';
+    ctx.font = '32px Roboto';
     ctx.fillText(`≈ ${currencyConvert(balance)}`, width / 2, 305);
 
     ctx.strokeStyle = '#00ff00';
     ctx.lineWidth = 3;
     ctx.strokeRect(20, 20, width - 40, height - 40);
 
-    ctx.font = '20px Arial';
+    ctx.font = '20px Roboto';
     ctx.fillStyle = '#00ff00';
     ctx.fillText('💰', 50, 50);
     ctx.fillText('💰', width - 50, height - 50);

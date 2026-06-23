@@ -1,5 +1,9 @@
 let createCanvas;
-try { createCanvas = require('canvas').createCanvas; } catch { createCanvas = null; }
+try {
+    const canvasPkg = require('canvas');
+    createCanvas = canvasPkg.createCanvas;
+    canvasPkg.registerFont(require('path').join(__dirname, '..', 'fonts', 'Roboto.ttf'), { family: 'Roboto' });
+} catch { createCanvas = null; }
 
 const GIFEncoder = require('gif-encoder-2');
 
@@ -49,18 +53,18 @@ function drawFrame(ctx, displayMult, target, crashPoint, win, showResult) {
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle    = '#888899';
-    ctx.font         = 'bold 18px Arial';
+    ctx.font         = 'bold 18px Roboto';
     ctx.fillText('🚀  L I M B O', W / 2, 36);
 
     // ── Animated crash point number ─────────────────────────────────────────────
-    ctx.font         = 'bold 90px Arial';
+    ctx.font         = 'bold 90px Roboto';
     ctx.fillStyle    = accent;
     ctx.shadowColor  = accent;
     ctx.shadowBlur   = showResult ? 28 : 10;
     ctx.fillText(`${displayMult.toFixed(2)}x`, W / 2, 115);
     ctx.shadowBlur   = 0;
 
-    ctx.font      = '16px Arial';
+    ctx.font      = '16px Roboto';
     ctx.fillStyle = '#666677';
     ctx.fillText(showResult ? 'CRASH POINT' : 'MULTIPLIER', W / 2, 163);
 
@@ -94,7 +98,7 @@ function drawFrame(ctx, displayMult, target, crashPoint, win, showResult) {
     ctx.setLineDash([]);
 
     ctx.fillStyle    = '#ffffff';
-    ctx.font         = 'bold 13px Arial';
+    ctx.font         = 'bold 13px Roboto';
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText(`TARGET  ${target.toFixed(2)}x`, targetX, BAR_Y + BAR_H + 13);
@@ -111,7 +115,7 @@ function drawFrame(ctx, displayMult, target, crashPoint, win, showResult) {
 
     // ── Scale labels ───────────────────────────────────────────────────────────
     ctx.fillStyle    = '#555566';
-    ctx.font         = '13px Arial';
+    ctx.font         = '13px Roboto';
     ctx.textBaseline = 'top';
     for (const t of [1, 2, 3, 4, 5]) {
         const tx = multToX(t);
@@ -133,7 +137,7 @@ function drawFrame(ctx, displayMult, target, crashPoint, win, showResult) {
         ctx.roundRect(pillX, pillY, pillW, pillH, 17);
         ctx.stroke();
         ctx.fillStyle    = accent;
-        ctx.font         = 'bold 16px Arial';
+        ctx.font         = 'bold 16px Roboto';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(win ? '✅  YOU WON' : '❌  YOU LOST', W / 2, pillY + pillH / 2);
