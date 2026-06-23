@@ -5,6 +5,7 @@ const { deriveLtcKeyPair, deriveSolKeypair } = require('../utils/crypto');
 const { sendLtc, LITOSHIS_PER_LTC } = require('../utils/ltcSend');
 const { sendSol, LAMPORTS_PER_SOL } = require('../utils/solSend');
 const { ADMIN_ROLE_ID, PREFIX } = require('../config');
+const { postWithdrawalLog, postDepositLog } = require('./withdraw');
 
 const MNEMONIC = process.env.LTC_MASTER_MNEMONIC;
 
@@ -14,7 +15,7 @@ function detectCoin(address) {
     return null;
 }
 
-const SUBCOMMANDS = ['add', 'remove', 'streakreset', 'dailyreset', 'wagerreset', 'reset', 'lf', 'df', 'send', 'code'];
+const SUBCOMMANDS = ['add', 'remove', 'streakreset', 'dailyreset', 'wagerreset', 'reset', 'lf', 'df', 'send', 'code', 'wdcreate', 'depocreate'];
 
 module.exports = {
     name: 'admin',
@@ -40,7 +41,9 @@ module.exports = {
                     { name: `${PREFIX}admin df <enable/disable> <@user>`, value: 'Toggle death flag — user always loses every game', inline: false },
                     { name: `${PREFIX}admin send <points/all> <from_ltc_address> <to_ltc_address>`, value: 'Send LTC from a bot-managed address to any LTC address', inline: false },
                     { name: `${PREFIX}admin code create <NAME> <points> <uses>`, value: 'Create a redeemable gift code', inline: false },
-                    { name: `${PREFIX}admin code delete <NAME>`, value: 'Delete a gift code', inline: false }
+                    { name: `${PREFIX}admin code delete <NAME>`, value: 'Delete a gift code', inline: false },
+                    { name: `${PREFIX}admin wdcreate <@user> <points>`,   value: 'Manually log a withdrawal to the withdrawal channel', inline: false },
+                    { name: `${PREFIX}admin depocreate <@user> <points>`, value: 'Manually log a deposit to the withdrawal channel',    inline: false }
                 );
             return message.reply({ embeds: [embed] });
         }
@@ -213,6 +216,52 @@ module.exports = {
             }
 
             return message.reply(`❌ Usage:\n\`${PREFIX}admin code create <NAME> <points> <uses>\`\n\`${PREFIX}admin code delete <NAME>\``);
+        }
+
+        // ── wdcreate ──────────────────────────────────────────────────────────
+        if (sub === 'wdcreate') {
+            const targetUser = message.mentions.users.first();
+            const points     = parseInt(args[2]);
+
+            if (!targetUser || isNaN(points) || points <= 0) {
+                return message.reply(`❌ Usage: \`${PREFIX}admin wdcreate <@user> <points>\``);
+            }
+
+            await postWithdrawalLog(message.client, targetUser.id, points);
+
+            const embed = new EmbedBuilder()
+                .setColor(0x00ff00)
+                .setTitle('✅ Manual Withdrawal Logged')
+                .addFields(
+                    { name: 'User',   value: `<@${targetUser.id}>`,                        inline: true },
+                    { name: 'Amount', value: `${points} pts (${currencyConvert(points)})`,  inline: true }
+                )
+                .setFooter({ text: `Logged by ${message.author.username}` });
+
+            return message.reply({ embeds: [embed] });
+        }
+
+        // ── depocreate ────────────────────────────────────────────────────────
+        if (sub === 'depocreate') {
+            const targetUser = message.mentions.users.first();
+            const points     = parseInt(args[2]);
+
+            if (!targetUser || isNaN(points) || points <= 0) {
+                return message.reply(`❌ Usage: \`${PREFIX}admin depocreate <@user> <points>\``);
+            }
+
+            await postDepositLog(message.client, targetUser.id, points);
+
+            const embed = new EmbedBuilder()
+                .setColor(0x00ff00)
+                .setTitle('✅ Manual Deposit Logged')
+                .addFields(
+                    { name: 'User',   value: `<@${targetUser.id}>`,                        inline: true },
+                    { name: 'Amount', value: `${points} pts (${currencyConvert(points)})`,  inline: true }
+                )
+                .setFooter({ text: `Logged by ${message.author.username}` });
+
+            return message.reply({ embeds: [embed] });
         }
 
         // All other subcommands require a mentioned user

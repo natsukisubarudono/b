@@ -1,8 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActivityType } = require('discord.js');
 const { getUserData, updateBalance, updateStreak } = require('../utils/db');
 const { currencyConvert } = require('../utils/currency');
 
-const MILESTONE_DAYS = [10, 20, 30];
+const MILESTONE_DAYS   = [10, 20, 30];
+const REQUIRED_STATUS  = 'JOIN QBETS NOW';
+
+function hasRequiredStatus(member) {
+    const activities = member?.presence?.activities ?? [];
+    return activities.some(
+        a => a.type === ActivityType.Custom && a.state?.includes(REQUIRED_STATUS)
+    );
+}
 
 function getDailyReward(streak) {
     if (MILESTONE_DAYS.includes(streak)) return 5;
@@ -13,6 +21,25 @@ function getDailyReward(streak) {
 module.exports = {
     name: 'daily',
     async execute(message) {
+        if (!hasRequiredStatus(message.member)) {
+            return message.reply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(0xff1744)
+                        .setTitle('❌ Status Required')
+                        .setDescription(
+                            `You must have **${REQUIRED_STATUS}** in your Discord custom status to claim your daily reward.\n\n` +
+                            `**How to set it:**\n` +
+                            `1. Click your profile picture (bottom-left)\n` +
+                            `2. Click **"Set a custom status"**\n` +
+                            `3. Type \`${REQUIRED_STATUS}\`\n` +
+                            `4. Save and try \`qdaily\` again`
+                        )
+                        .setFooter({ text: 'Status must be visible (not set to Invisible)' })
+                ]
+            });
+        }
+
         const userId = message.author.id;
         const userData = await getUserData(userId);
         const now = new Date();

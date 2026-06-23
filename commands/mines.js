@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { getUserData, updateBalance, addWagered } = require('../utils/db');
+const { checkAndApplyWagerRoles } = require('../utils/wagerRoles');
 const { currencyConvert } = require('../utils/currency');
 const {
     generateServerSeed, hashServerSeed,
@@ -122,6 +123,10 @@ async function endGame(game, interaction, status) {
         await updateBalance(game.userId, payout);
     }
     await addWagered(game.userId, game.bet);
+    if (interaction) {
+        const wagerData = await getUserData(game.userId);
+        await checkAndApplyWagerRoles(interaction.client, interaction.guild, game.userId, wagerData.total_wagered);
+    }
 
     // For LF games: retroactively find a real seed consistent with all revealed tiles being safe
     if (game.lucky && game.revealedCount > 0) {

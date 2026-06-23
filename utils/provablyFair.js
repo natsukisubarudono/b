@@ -82,6 +82,18 @@ function findDFSeedForMines(mineCount, hitTile) {
     }
 }
 
+// ── Limbo ──────────────────────────────────────────────────────────────────────
+
+/**
+ * Derive a crash point float in [1.00, 5.00] from a server seed.
+ * Uses first 8 hex chars of SHA256(seed:limbo), scaled to [1, 5].
+ */
+function deriveLimboFloat(serverSeed) {
+    const hash = crypto.createHash('sha256').update(`${serverSeed}:limbo`).digest('hex');
+    const raw  = parseInt(hash.slice(0, 8), 16) / 0xFFFFFFFF;
+    return 1.0 + raw * 4.0; // [1.00, 5.00]
+}
+
 // ── Dice ───────────────────────────────────────────────────────────────────────
 
 /**
@@ -101,6 +113,7 @@ module.exports = {
     generateServerSeed, hashServerSeed,
     deriveResult, verify,
     deriveMineLayout, verifyMines, findLFSeedForMines, findDFSeedForMines,
+    deriveLimboFloat,
     deriveDiceRolls,
     MINES_TOTAL,
 };

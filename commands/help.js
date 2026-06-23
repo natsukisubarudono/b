@@ -10,9 +10,11 @@ const SECTIONS = {
             .setTitle('🎮 Games')
             .setDescription('All available game commands')
             .addFields(
-                { name: `${PREFIX}cf <heads/tails> <amount>`, value: 'Flip a coin and bet points. Use `h`/`t` for short.', inline: false },
-                { name: `${PREFIX}dice <amount>`, value: 'Roll a die against the bot — higher number wins.', inline: false },
-                { name: `${PREFIX}mines <amount> <mines>`, value: 'Play Minesweeper. Reveal tiles and cash out before hitting a mine.', inline: false },
+                { name: `${PREFIX}cf <heads/tails> <amount>`,  value: 'Flip a coin and bet points. Use `h`/`t` for short.', inline: false },
+                { name: `${PREFIX}dice <amount>`,               value: 'Roll a die against the bot — higher number wins.', inline: false },
+                { name: `${PREFIX}mines <amount> <mines>`,      value: 'Play Minesweeper. Reveal tiles and cash out before hitting a mine.', inline: false },
+                { name: `${PREFIX}limbo <amount> <multiplier>`, value: 'Pick a target multiplier (1.2×–5.0×). Win if the crash point lands at or above it. Alias: `lmb`', inline: false },
+                { name: `${PREFIX}stock <amount> <high/low>`,   value: 'Predict whether the market goes up or down. Alias: `st`', inline: false },
             )
             .setFooter({ text: `All games are provably fair • Use ${PREFIX}verify to check results` }),
     },
@@ -68,7 +70,7 @@ const mainEmbed = () => new EmbedBuilder()
     .setTitle('📖 Help')
     .setDescription('Select a category from the dropdown below to view its commands.')
     .addFields(
-        { name: '🎮 Games',              value: 'Coinflip, Dice, Mines',               inline: true },
+        { name: '🎮 Games',              value: 'Coinflip, Dice, Mines, Limbo, Stock', inline: true },
         { name: '💰 Balance',            value: 'Balance, Daily, Milestones, Tip',     inline: true },
         { name: '🏦 Withdraw / Depo',    value: 'Deposit & withdraw crypto',           inline: true },
         { name: '🎟️ Affiliates / Codes', value: 'Gift codes & provably fair verify',  inline: true },
@@ -83,7 +85,7 @@ module.exports = {
             .setCustomId('help_menu')
             .setPlaceholder('Choose a category...')
             .addOptions(
-                { label: '🎮 Games',              value: 'games',      description: 'Coinflip, Dice, Mines' },
+                { label: '🎮 Games',              value: 'games',      description: 'Coinflip, Dice, Mines, Limbo, Stock' },
                 { label: '💰 Balance',            value: 'balance',    description: 'Balance, Daily, Milestones, Tip' },
                 { label: '🏦 Withdraw / Depo',    value: 'deposit',    description: 'Deposit & withdraw crypto' },
                 { label: '🎟️ Affiliates / Codes', value: 'affiliates', description: 'Gift codes & provably fair verify' },
