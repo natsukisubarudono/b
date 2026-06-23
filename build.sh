@@ -20,4 +20,8 @@ npm install
 echo ">>> Rebuilding canvas from source..."
 npm rebuild canvas --build-from-source
 
+echo ">>> Downloading Roboto font..."
+mkdir -p fonts
+curl -L -o fonts/Roboto.ttf "https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me5WZLCzYlKw.ttf"
+
 echo ">>> Build complete."
