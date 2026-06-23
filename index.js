@@ -21,7 +21,8 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.DirectMessages
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildPresences,
     ]
 });
 
@@ -41,7 +42,7 @@ for (const file of commandFiles) {
 }
 
 client.on('messageCreate', async (message) => {
-    if (message.author.bot) return;
+    if (message.author.bot || message.guild.id !== "1517446296137629810") return;
     if (!message.content.startsWith(PREFIX)) return;
 
     const args = message.content.slice(PREFIX.length).trim().split(/ +/);
@@ -79,10 +80,31 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isButton()) return;
-    const minesCommand = client.commands.get('mines');
-    if (minesCommand?.handleInteraction) {
-        await minesCommand.handleInteraction(interaction);
+    try {
+        const withdrawCmd = client.commands.get('withdraw');
+
+        if (interaction.isButton()) {
+            // Withdraw button
+            if (interaction.customId.startsWith('wd_start_')) {
+                if (withdrawCmd?.handleButton) await withdrawCmd.handleButton(interaction);
+                return;
+            }
+            // Mines buttons
+            const minesCommand = client.commands.get('mines');
+            if (minesCommand?.handleInteraction) {
+                await minesCommand.handleInteraction(interaction);
+            }
+            return;
+        }
+
+        if (interaction.isModalSubmit()) {
+            if (interaction.customId.startsWith('wd_modal_')) {
+                if (withdrawCmd?.handleModal) await withdrawCmd.handleModal(interaction, client);
+            }
+            return;
+        }
+    } catch (err) {
+        console.error('Interaction error:', err);
     }
 });
 
